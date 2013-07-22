@@ -1,0 +1,12 @@
+My name is Fred. | 3 4 5
+I am 44 years old. | 5 6 7 9 10
+I am from Cincinnati. | 9 10 11
+Why thanks, it means a lot. | -1
+A good one. | 4 9
+Why don't you just shutup. | -1
+I'm not that old! | 9 
+I find that hard to believe. | 9 10
+I'm not so sure I like that. | 9
+Yes Really, now leave me alone. | -1
+Well good for you. | -1
+You wouldn't know. | -1

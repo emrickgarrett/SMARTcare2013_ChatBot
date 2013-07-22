@@ -3,7 +3,7 @@ package chatbotscripter;
 import java.util.ArrayList;
 
 /**
- * 
+ *   
  * @author Garrett
  * 
  * Class that will hold an answers information

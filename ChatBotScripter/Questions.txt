@@ -1,0 +1,17 @@
+What's your name? | 0 | F
+How old are you? | 1 | F
+Where are you from? | 2 | F
+That's a good name! | 3 | T
+What kind of name is that? | 4 | T
+What a terrible name! | 5 | T
+Wow, you're old! | 6 | T
+Same age as me! | 7 | T
+I like older men. | 8 | T
+Really? | 9 | T
+Me too! | 10 | T
+That place is awful | 11 | T
+Is this the real life? | 12 | F
+Caught in a landslide... | 13 | T
+Open your eyes... | 14 | T
+I'm just a poor boy | 15 | T
+Because I'm easy come! Easy go! | 16 | T
