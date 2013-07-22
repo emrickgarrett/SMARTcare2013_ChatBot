@@ -38,6 +38,7 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
         ChatbotHandler.addListener(this);
         ChatBot_CoreCharacteristics chatbotCore = new ChatBot_CoreCharacteristics("Charles", 25, "01/16/1966", Gender.MALE, MentalStatus.ORIENTED);
         ChatBot_InputOutput newChatbotInputOutput = new ChatBot_InputOutput(chatbotCore);
+        newChatbotInputOutput.setQuestionHandler(this);
         Thread t = new Thread(newChatbotInputOutput);
         t.start();
         
@@ -270,11 +271,12 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
      * Query a specific question
      * @param s 
      */
-    private void queryQuestion(String s){
+    public void queryQuestion(String s){
         String result = data.askQuestion(s);
-        chatLog.add("You: " + s);
+        //chatLog.add("You: " + s);
         chatLog.add(botName + ": " + result);
         compileStringList.setListData(chatLog.toArray());
+        refreshList();
         
     }
     

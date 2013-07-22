@@ -27,7 +27,7 @@ public class ChatBot_InputOutput implements Runnable, InputListener
 {
 
     //Using this for Garrett's Chatbot Compiler
-    BotCompiler compiler = new BotCompiler();
+    BotCompiler compiler;
     ChatBot_CoreCharacteristics newChatBot;
     boolean hasQuestion = false;
     String question = "";
@@ -65,7 +65,7 @@ public class ChatBot_InputOutput implements Runnable, InputListener
             {
                 if (i > 0)
                 {
-                    System.out.println("anything else?");
+                    //System.out.println("anything else?");
                     ChatbotHandler.answerRecieved("anything else?");
                 }//end of if
                 //String question = inputReader.nextLine();
@@ -80,6 +80,11 @@ public class ChatBot_InputOutput implements Runnable, InputListener
                     ChatbotHandler.questionAsked(question);
                     AnswerPackage chatBotAnswerPackage = isQuestionInDatabase(databaseList, question);
                     directoryList = processInput(chatBotAnswerPackage, directoryList, newChatBot, inputReader);
+                    
+                    if(chatBotAnswerPackage.isIsInDataBase()){
+                        System.out.println("WAS IN THE DATABASE :)");
+                        compiler.queryQuestion(question);
+                    }
                 }//end of if
                 else if (question.equalsIgnoreCase("no"))
                 {
@@ -110,13 +115,20 @@ public class ChatBot_InputOutput implements Runnable, InputListener
                 }//end of if
                 else
                 {
-                    System.out.println("Vague response interpereted as yes. proceed with conversation.");
-                    ChatbotHandler.answerRecieved("Vague response interpreted as a yes. Proceed with conversation");
+
                     //question = inputReader.nextLine();
-                    question = getUserInput();
-                    ChatbotHandler.questionAsked(question);
+                    //question = getUserInput();
+                    //ChatbotHandler.questionAsked(question);
                     AnswerPackage chatBotAnswerPackage = isQuestionInDatabase(databaseList, question);
                     directoryList = processInput(chatBotAnswerPackage, directoryList, newChatBot, inputReader);
+                    
+                    if(chatBotAnswerPackage.isIsInDataBase()){
+                        System.out.println("WAS IN THE DATABASE :)");
+                        compiler.queryQuestion(question);
+                    }else{
+                        System.out.println("Vague response interpereted as yes. proceed with conversation.");
+                        ChatbotHandler.answerRecieved("Vague response interpreted as a yes. Proceed with conversation");
+                    }
                 }//end of else
                 i++;
             } while (exitCue == false);
@@ -227,18 +239,22 @@ public class ChatBot_InputOutput implements Runnable, InputListener
         ArrayList<String> questionList = new ArrayList<>(2);
         AnswerPackage newAnswerPackage = new AnswerPackage();
         newAnswerPackage.setQuestionString(question);
+        //System.out.println("QUESTION SPOT 1: " + question);
         //get the input from the outside. This will always be in text.
         //get the question list database
+        //System.out.println("I'm Here");
         for (DatabaseContainer currentContainer : containerList)
         {
             if (currentContainer.getDatabaseName().equals("QuestionList.txt"))
             {
+                //System.out.println("Got the database");
                 questionList = currentContainer.getContents();
             }//end of if
         }//end of for
         for (int i = 0; i < questionList.size(); i++)
         {
             String currentQuestion = questionList.get(i);
+            //System.out.println("CURRENT QUESTION SPOT 2: " + currentQuestion);
             if (question.equalsIgnoreCase(currentQuestion))
             {
                 isInQuestionDatabase = true;
@@ -271,7 +287,7 @@ public class ChatBot_InputOutput implements Runnable, InputListener
         ArrayList<DatabaseContainer> databaseList = directoryList.getDatabaseContainerList();
         if (chatbotAnswerPackage.isIsInDataBase())
         {
-            System.out.println(chatbotAnswerPackage.getResponseString());
+            //System.out.println(chatbotAnswerPackage.getResponseString());
         }//end of if
         else
         {
@@ -512,6 +528,10 @@ public class ChatBot_InputOutput implements Runnable, InputListener
     
     public void resetQuestion(){
         question = "";
+    }
+    
+    public void setQuestionHandler(BotCompiler compiler){
+        this.compiler = compiler;
     }
     
     
