@@ -37,7 +37,7 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
         compileStringList.setListData(chatLog.toArray());
         ChatbotHandler.addListener(this);
         ChatBot_CoreCharacteristics chatbotCore = new ChatBot_CoreCharacteristics("Charles", 25, "01/16/1966", Gender.MALE, MentalStatus.ORIENTED);
-        ChatBot_InputOutput newChatbotInputOutput = new ChatBot_InputOutput(chatbotCore);
+        newChatbotInputOutput = new ChatBot_InputOutput(chatbotCore);
         newChatbotInputOutput.setQuestionHandler(this);
         Thread t = new Thread(newChatbotInputOutput);
         t.start();
@@ -238,6 +238,7 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
     ArrayList<String> chatLog = new ArrayList<String>();
     String botName = "Default";
     GUI mainGUI;
+     ChatBot_InputOutput newChatbotInputOutput;
     
     //My Methods
     
@@ -301,6 +302,12 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
      */
     public void refreshList(){
         compileStringList.setListData(chatLog.toArray());
+    }
+    
+    public void endThread(){
+        newChatbotInputOutput.exit();
+        this.newChatbotInputOutput = null;
+        this.setVisible(false);
     }
 
     

@@ -29,8 +29,9 @@ public class ChatBot_InputOutput implements Runnable, InputListener
     //Using this for Garrett's Chatbot Compiler
     BotCompiler compiler;
     ChatBot_CoreCharacteristics newChatBot;
-    boolean hasQuestion = false;
-    String question = "";
+    static boolean hasQuestion = false;
+    static String question = "";
+    boolean exitCue = false;
     
     
 //    /**
@@ -53,7 +54,6 @@ public class ChatBot_InputOutput implements Runnable, InputListener
     @Override
     public void run() {
         Scanner inputReader = new Scanner(System.in);
-        boolean exitCue = false;
         while(!exitCue){
             DatabaseDirectoryList directoryList = uploadFilesToDatabase();
             ArrayList<DatabaseContainer> databaseList = directoryList.getDatabaseContainerList();
@@ -314,7 +314,7 @@ public class ChatBot_InputOutput implements Runnable, InputListener
                 if (returnObject.getIntHolder() > 1)
                 {
                     //these responses are geared towards multiple contexts which the program was able to find.
-                    response = inputReader.nextLine();
+                    response = getUserInput();
                     ChatbotHandler.questionAsked(response);
                     //this is what the user wants.
                     System.out.println("ok, we're talking about " + contextString);
@@ -437,7 +437,8 @@ public class ChatBot_InputOutput implements Runnable, InputListener
     private static DatabaseDirectoryList identifyContext(Scanner inputReader, DatabaseDirectoryList directoryList, ChatBot_CoreCharacteristics newChatBot)
     {
         System.out.println("What are you talking about?");
-        String contextName = inputReader.nextLine();
+        ChatbotHandler.answerRecieved("What are you talking about?");
+        String contextName = getUserInput();
         ArrayList<DatabaseContainer> containerList = directoryList.getDatabaseContainerList();
         boolean contextFound = false;
         //if the program contains the context that the person is speaking about
@@ -517,7 +518,7 @@ public class ChatBot_InputOutput implements Runnable, InputListener
     }//end of clearDatabase method
 
     
-    public String getUserInput(){
+    public static String getUserInput(){
         while(!hasQuestion){
             
         }
@@ -532,6 +533,11 @@ public class ChatBot_InputOutput implements Runnable, InputListener
     
     public void setQuestionHandler(BotCompiler compiler){
         this.compiler = compiler;
+    }
+    
+    public void exit(){
+        ChatbotHandler.removeListener(this);
+        this.exitCue = true;
     }
     
     
