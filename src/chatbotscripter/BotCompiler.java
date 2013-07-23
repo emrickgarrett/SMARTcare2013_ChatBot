@@ -38,6 +38,7 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
         ChatbotHandler.addListener(this);
         ChatBot_CoreCharacteristics chatbotCore = new ChatBot_CoreCharacteristics("Charles", 25, "01/16/1966", Gender.MALE, MentalStatus.ORIENTED);
         ChatBot_InputOutput newChatbotInputOutput = new ChatBot_InputOutput(chatbotCore);
+        newChatbotInputOutput.setCompiler(this);
         Thread t = new Thread(newChatbotInputOutput);
         t.start();
         
@@ -154,6 +155,7 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
 //        userInputField.setText("");
         InputHandler.sendUserInput(userInputField.getText());
         userInputField.setText("");
+        refreshList();
     }//GEN-LAST:event_sendButtonActionPerformed
 
     /**
@@ -163,6 +165,7 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         reloadData();
+        refreshList();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
@@ -175,6 +178,7 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             InputHandler.sendUserInput(userInputField.getText());
             userInputField.setText("");
+            refreshList();
         }
     }//GEN-LAST:event_userInputFieldKeyPressed
 
@@ -270,11 +274,11 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
      * Query a specific question
      * @param s 
      */
-    private void queryQuestion(String s){
+    public void queryQuestion(String s){
         String result = data.askQuestion(s);
-        chatLog.add("You: " + s);
         chatLog.add(botName + ": " + result);
         compileStringList.setListData(chatLog.toArray());
+        refreshList();
         
     }
     
@@ -284,6 +288,7 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
      */
     public void addBotResponse(String s){
         chatLog.add(botName + ": " + s);
+        refreshList();
     }
     
     /**
@@ -292,6 +297,7 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
      */
     public void addHumanResponse(String s){
         chatLog.add("You: " + s);
+        refreshList();
     }
     
     /**
@@ -353,6 +359,7 @@ public class BotCompiler extends javax.swing.JFrame implements ChatbotListener{
     @Override
     public void onNameChanged(String s) {
         botName = s;
+        refreshList();
     }
 
     /**

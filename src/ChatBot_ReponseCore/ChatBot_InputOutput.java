@@ -27,10 +27,10 @@ public class ChatBot_InputOutput implements Runnable, InputListener
 {
 
     //Using this for Garrett's Chatbot Compiler
-    BotCompiler compiler = new BotCompiler();
+    BotCompiler compiler;
     ChatBot_CoreCharacteristics newChatBot;
-    boolean hasQuestion = false;
-    String question = "";
+    static boolean hasQuestion = false;
+    static String question = "";
     
     
 //    /**
@@ -65,6 +65,7 @@ public class ChatBot_InputOutput implements Runnable, InputListener
             {
                 if (i > 0)
                 {
+                    compiler.refreshList();
                     System.out.println("anything else?");
                     ChatbotHandler.answerRecieved("anything else?");
                 }//end of if
@@ -110,13 +111,21 @@ public class ChatBot_InputOutput implements Runnable, InputListener
                 }//end of if
                 else
                 {
-                    System.out.println("Vague response interpereted as yes. proceed with conversation.");
-                    ChatbotHandler.answerRecieved("Vague response interpreted as a yes. Proceed with conversation");
+                    
                     //question = inputReader.nextLine();
-                    question = getUserInput();
-                    ChatbotHandler.questionAsked(question);
+                    //question = getUserInput();
+                    //ChatbotHandler.questionAsked(question);
                     AnswerPackage chatBotAnswerPackage = isQuestionInDatabase(databaseList, question);
                     directoryList = processInput(chatBotAnswerPackage, directoryList, newChatBot, inputReader);
+                    
+                    if(chatBotAnswerPackage.isIsInDataBase()){
+                        compiler.queryQuestion(chatBotAnswerPackage.getQuestionString());
+                    }else{
+                        System.out.println("Vague response interpereted as yes. proceed with conversation.");
+                        ChatbotHandler.answerRecieved("Vague response interpreted as a yes. Proceed with conversation");
+                    }
+                    
+                    compiler.refreshList();
                 }//end of else
                 i++;
             } while (exitCue == false);
@@ -501,9 +510,8 @@ public class ChatBot_InputOutput implements Runnable, InputListener
     }//end of clearDatabase method
 
     
-    public String getUserInput(){
+    public static String getUserInput(){
         while(!hasQuestion){
-            
         }
         
         hasQuestion = false;
@@ -512,6 +520,10 @@ public class ChatBot_InputOutput implements Runnable, InputListener
     
     public void resetQuestion(){
         question = "";
+    }
+    
+    public void setCompiler(BotCompiler compiler){
+        this.compiler = compiler;
     }
     
     
@@ -523,6 +535,7 @@ public class ChatBot_InputOutput implements Runnable, InputListener
     public void inputSubmitted(String s) {
         question = s;
         hasQuestion = true;
+        compiler.refreshList();
     }
 
     @Override
