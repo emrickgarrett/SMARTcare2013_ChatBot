@@ -32,8 +32,7 @@ public class ChatBot_InputOutput implements Runnable, InputListener
     static boolean hasQuestion = false;
     static String question = "";
     boolean exitCue = false;
-    
-    
+
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -49,12 +48,12 @@ public class ChatBot_InputOutput implements Runnable, InputListener
         InputHandler.addListener(this);
     }//end of constructor
 
-    
-    
     @Override
-    public void run() {
+    public void run()
+    {
         Scanner inputReader = new Scanner(System.in);
-        while(!exitCue){
+        while (!exitCue)
+        {
             DatabaseDirectoryList directoryList = uploadFilesToDatabase();
             ArrayList<DatabaseContainer> databaseList = directoryList.getDatabaseContainerList();
             ChatbotHandler.chatBotReady();
@@ -80,8 +79,9 @@ public class ChatBot_InputOutput implements Runnable, InputListener
                     ChatbotHandler.questionAsked(question);
                     AnswerPackage chatBotAnswerPackage = isQuestionInDatabase(databaseList, question);
                     directoryList = processInput(chatBotAnswerPackage, directoryList, newChatBot, inputReader);
-                    
-                    if(chatBotAnswerPackage.isIsInDataBase()){
+
+                    if (chatBotAnswerPackage.isIsInDataBase())
+                    {
                         System.out.println("WAS IN THE DATABASE :)");
                         compiler.queryQuestion(question);
                     }
@@ -121,11 +121,13 @@ public class ChatBot_InputOutput implements Runnable, InputListener
                     //ChatbotHandler.questionAsked(question);
                     AnswerPackage chatBotAnswerPackage = isQuestionInDatabase(databaseList, question);
                     directoryList = processInput(chatBotAnswerPackage, directoryList, newChatBot, inputReader);
-                    
-                    if(chatBotAnswerPackage.isIsInDataBase()){
+
+                    if (chatBotAnswerPackage.isIsInDataBase())
+                    {
                         System.out.println("WAS IN THE DATABASE :)");
                         compiler.queryQuestion(question);
-                    }else{
+                    } else
+                    {
                         System.out.println("Vague response interpereted as yes. proceed with conversation.");
                         ChatbotHandler.answerRecieved("Vague response interpreted as a yes. Proceed with conversation");
                     }
@@ -134,6 +136,7 @@ public class ChatBot_InputOutput implements Runnable, InputListener
             } while (exitCue == false);
         }
     }
+
     /**
      * This method uploads a batch of files from a file folder and loads them into the program.
      *
@@ -370,6 +373,58 @@ public class ChatBot_InputOutput implements Runnable, InputListener
         ArrayList<DatabaseContainer> containerList = directoryList.getDatabaseContainerList();
         ArrayList<String> contextList = new ArrayList<>(10);
         MethodReturnObject returnObject = new MethodReturnObject();
+        ArrayList<OwnershipContainer> ownershipContainerList = directoryList.getOwnershipContainerList();
+
+        for (OwnershipContainer currentOwnershipContainer : ownershipContainerList)
+        {
+            int currentElementIndex = 0;
+            for (String currentElement : currentOwnershipContainer.getContents())
+            {
+                if (statement.contains(currentElement))
+                {
+
+
+                    //the element is in the statement
+                    //identify WHO they are talking about
+                    //get who the person was speaking about by checking what the reference is through the index
+                    ArrayList<Integer> referenceArray = currentOwnershipContainer.getReferenceList().get(currentElementIndex);
+                    //now I have the proper references to pull from and I can get who the person was speaking about from this.
+                    if (referenceArray.size() > 1)
+                    {
+                        //for a single reference
+                        switch (referenceArray.get(0))
+                        {
+                            case 1:
+                            {
+                                //this will be a personnal reference - I
+                                System.out.println("ownership recognition: I");
+                            }//end of case
+                            case 2:
+                            {
+                                //you reference
+                                System.out.println("ownership recognition: you");
+                            }//end of case
+                            case 3:
+                            {
+                                //group reference on inclusive (they, them)
+                                System.out.println("ownership recognition: they");
+                            }//end of case
+                            case 4:
+                            {
+                                //group reference inclusive (we, us)
+                                System.out.println("ownership recognition: we");
+                            }//end of case
+                        }//end of switch
+                    }//end of if
+                    else
+                    {
+                        //more than one element for the current word in the array
+                    }//end of else
+                    currentElementIndex++;
+                }//end of if
+            }//end of for
+        }//end of for
+
         for (DatabaseContainer currentContainer : containerList)
         {
             ArrayList<String> databaseContents = currentContainer.getContents();
@@ -517,48 +572,51 @@ public class ChatBot_InputOutput implements Runnable, InputListener
         return databaseList;
     }//end of clearDatabase method
 
-    
-    public static String getUserInput(){
-        while(!hasQuestion){
-            
+    public static String getUserInput()
+    {
+        while (!hasQuestion)
+        {
         }
-        
+
         hasQuestion = false;
         return question;
     }
-    
-    public void resetQuestion(){
+
+    public void resetQuestion()
+    {
         question = "";
     }
-    
-    public void setQuestionHandler(BotCompiler compiler){
+
+    public void setQuestionHandler(BotCompiler compiler)
+    {
         this.compiler = compiler;
     }
-    
-    public void exit(){
+
+    public void exit()
+    {
         ChatbotHandler.removeListener(this);
         this.exitCue = true;
     }
-    
-    
+
     /**
      * Start InputListener methods
      */
-    
     @Override
-    public void inputSubmitted(String s) {
+    public void inputSubmitted(String s)
+    {
         question = s;
         hasQuestion = true;
     }
 
     @Override
-    public void onExit(int code) {
+    public void onExit(int code)
+    {
         System.exit(code);
     }
 
     @Override
-    public void inputTypeChanged(int inputType) {
+    public void inputTypeChanged(int inputType)
+    {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }//end of class
