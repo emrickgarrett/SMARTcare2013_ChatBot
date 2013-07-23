@@ -1,0 +1,15 @@
+For Legend, see Readme
+
+I 1
+you 2
+it 2
+me 1
+he 2
+she 2
+we 4
+us 4
+them 3
+they 3
+our 4
+their 3
+theirs 3
